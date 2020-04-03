@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %} 从商品ASIN获得库存数量 | {{ site_name }}{% endblock %}
+{% load static %}
+
+{% block rootcontainer %}
+<div class="container">
+    <div id="content">
+        {% if messages %} <!--messages的用法-->
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">
+                        {{ message|safe }} <!--safe的用法-->
+                        <a href="#" class="close">×</a>
+                    </li>
+                {% endfor %}
+                <br><br>
+            </ul>
+        {% endif %}
+<div class="row">
+        <div class="col-lg-4 ">
+            <form action="." method="post" onsubmit='showLoading();' id="login_form">
+                {{ form.as_p }}
+                {% csrf_token %}
+                <input type="submit" value="从ASIN获得库存">
+            </form>
+        </div>
+
+        <div class="col-lg-4 ">
+        <img src="{% static "images/spin.gif" %}" id="gif" style="display: block; margin: 0 auto; width: 100px; visibility: hidden;">
+        </div>
+</div>
+
+        <ul class="messages"><li class="success">已经获取库存信息的商品</li></ul>
+        <div id="people-list">
+            {% for inventory in inventorys %}
+                <div class="user">
+                    <a id="name">{{ inventory.title|truncatewords:7 }}</a>
+                    <br>
+                    <a class="small">ID {{ inventory.asin }}</a>
+                </div>
+            {% endfor %}
+        </div>
+</div>
+{% endblock %}
+
+{% block extrajsexternal %}
+<script type="text/javascript">
+$('#login_form').submit(function() {
+    $('#gif').css('visibility', 'visible');
+});
+</script>
+{% endblock %}

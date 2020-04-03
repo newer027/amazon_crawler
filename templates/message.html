@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if message == 'no_exist' %}
+        <p class="lead">对不起，您所验证的用户不存在，请重新注册</a>操作</p>
+    {% elif message == 'ok' %}
+        <p class="lead">验证成功，请进行<a href="/accounts/login">登录</a>操作</p>
+    {% elif message == 'expired' %}
+        <p class="lead">对不起，验证链接已经过期，请重新<a href="/accounts/signup">注册</a></p>
+    {% endif %}
+{% endblock %}

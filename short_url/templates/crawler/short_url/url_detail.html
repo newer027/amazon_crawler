@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %} {{ url.httpurl }}的shorten url | {{ site_name }}{% endblock %}
+
+{% block rootcontainer %}
+<div class="container">
+    <div id="content">
+    <div class="col-sm-12">
+
+        {% if messages %} <!--messages的用法-->
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">
+                        {{ message|safe }} <!--safe的用法-->
+                        <a href="#" class="close">×</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <br>
+        <h4>{{ url.httpurl }}的shorten url：</h4>
+        <div style="overflow: auto;">
+            <table id="change" class="display" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>日期</th>
+                        <th>httpurl</th>
+                        <th>shorten url</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ url.pub_date |date:"Y-m-d" }} </td>
+                        <td>{{ url.httpurl }}</td>
+                        <td>{{ url.shorten_id }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrajsexternal %}
+    <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="/static/main.js"></script>
+{% endblock %}

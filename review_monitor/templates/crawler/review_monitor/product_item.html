@@ -1,0 +1,39 @@
+{% load review_monitor_tags %}
+
+<div class="user clearfix" style="position: relative;">
+        <img class="user-detail" src="{% if product.img_url %}{{ product.img_url }}{% else %}{{ 'http://www.amz668.com/static/images/icons/icon.jpg' }}{% endif %}" width=50 style="width:50px; height:50px;">
+        <a class="products_title1" href="{{product.detail_page_url}}">{{ product.title }}</a>
+        <span class="products_title">跟踪差评:{{product.star}}星{% ifequal product.star 1 %}{% else %}和以下{% endifequal %}</span>
+
+    <span class="products_id">{{product.get_country_display}}:{{product.asin}}</span>
+    {% count_reviews product as count %}
+    {% if count %}
+    <a class="in_stock" href="javascript:;" id="{{product.id}}"  onclick="amz668.viewInventory(this.id);return false;"><i class="fa fa-bar-chart" aria-hidden="true"></i>{{ count }}次差评</a>
+    {% else %}<span class="in_stock">没有发现差评</span> {% endif %}
+
+    {% days_remain product request.user as days %}
+    <span class="day_num">剩余天数:{{ days }} </span>
+    <a href="/review_monitor/more_monitor/{{ product.id }}" class="renewal_btn" onclick="">续期</a>
+   <!--  <a href="javascript:;" class="refresh_btn" onclick="amz668.refreshInventory(this)">刷新</a> -->
+    <a href="/review_monitor/delete/{{ product.id }}" class="del_btn"  data="{{ product.asin }}" onclick="">删除</a>
+
+
+    <div id="id_{{product.id}}" style="display: none">
+    <table id="change" class="display dataTable no-footer" cellspacing="0" role="grid" aria-describedby="change_info" style="width: 100%;">
+        <thead>
+            <tr role="row">
+                <th class="sorting" tabindex="0" aria-controls="change" rowspan="1" colspan="1" aria-label="买家ID: activate to sort column ascending" style="width: 20px;">买家ID</th>
+                <th class="sorting" tabindex="0" aria-controls="change" rowspan="1" colspan="1" aria-label="留评时间: activate to sort column ascending" style="width: 20px;">留评时间</th></tr>
+        </thead>
+        <tbody id="result">
+            {% reviews product as reviews %}
+            {%for review in reviews%}
+            <tr role="row" class="odd">
+                <td><a href="{{review.customer_url}}" target="_blank">{{ review.customer_id }}</a></td>
+                <td>{{ review.review_time }}</td>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+
+</div>

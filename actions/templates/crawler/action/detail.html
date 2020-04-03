@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block title %}我的查询记录 | {{ site_name }}{% endblock %}
+
+{% block rootcontainer %}
+<div class="action_content">
+    {% for action in actions %}
+       <p> 我在 {{action.created|date:"m月d日H:i" }} {{action.verb}} {{action.target_text}} </p>
+{% empty %}
+	<p>暂无查询记录！</p>
+    {% endfor %}
+
+
+{% include "crawler/action/pagination.html" with page=actions %}
+</div>
+{% endblock %}

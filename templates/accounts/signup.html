@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block heading %}
+
+<h3>
+    <span class="fa fa-check-square-o"></span>
+    免费注册,立刻享受更多服务.
+</h3>
+{% endblock %}
+
+    {% if messages %}
+     <ul class="messages">
+       {% for message in messages %}
+         <li class="{{ message.tags }}">
+            {{ message|safe }}
+            <a href="#" class="close">✖</a>
+         </li>
+       {% endfor %}
+     </ul>
+   {% endif %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+   {% crispy form %}
+{% endblock %}

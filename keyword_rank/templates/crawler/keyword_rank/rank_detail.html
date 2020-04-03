@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %} {{ keyword_rank.title }}的关键词排名变化 | {{ site_name }}{% endblock %}
+
+{% block extracss %}
+
+
+{% endblock %}
+
+{% block rootcontainer %}
+ <div class="search_description">
+     {% if user.is_authenticated %}
+        <span>当前剩余积分：<i class="red">{{user.settings.credit}}</i></span>
+        <span class="buy">积分不够？<a href="{% url 'payment:recharge' %}" target="_blank">立即购买</a></span>
+        <span>每次查询消耗<i class="red">&nbsp;4&nbsp;</i>积分，24小时内查询同一个Asin，只消耗一次积分</span>
+    {% else %}
+    <span>新用户免费获得100积分,每次查询消耗<i class="red">&nbsp;4&nbsp;</i>积分，24小时内查询同一个Asin，只消耗一次积分</span>
+    {% endif %}
+</div>
+<div class="container">
+    <div id="content">
+    <div class="col-sm-12">
+
+        {% if messages %} <!--messages的用法-->
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">
+                        {{ message|safe }} <!--safe的用法-->
+                        <a href="#" class="close">×</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <form action="." method="post">
+            <div class="search_box">
+                <!-- <label for="id_asin">Asin:</label> -->
+
+                <input id="id_asin" placeholder="输入产品ASIN" class="search_input" maxlength="400" name="asin" type="text" required="" style="width: 203px;border-left:2px solid #4cae4c">
+                <select  class="search_select" id="id_country" name="country" required="">
+                    <option value="us" selected="selected">美国</option>
+                    <option value="ca">加拿大</option>
+                    <option value="fr">法国</option>
+                    <option value="de">德国</option>
+                    <option value="it">意大利</option>
+                    <option value="jp">日本</option>
+                    <option value="es">西班牙</option>
+                    <option value="uk">英国</option>
+                </select>
+                    <input id="id_word" placeholder="输入关键词" class="search_input" maxlength="500" name="word" type="text" required="" style="width: 226px;border-left:2px solid #4cae4c">
+                    {% csrf_token %}
+                <input type="submit" style="width:100px;margin-top:-37px"  value="查询产品排名">
+
+            </div>
+        </form>
+
+        <div class="col-lg-12 ">
+            <img src="{% static "images/spin.gif" %}" id="gif" style="display: none; margin: 0 auto; width: 100px; /*visibility: hidden;*/">
+        </div>
+
+        <br>
+        <div style="overflow: auto;">
+            <table id="change" class="display" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>ASIN</th>
+                        <th>关键词</th>
+                        <th>日期</th>
+                        <th>页面</th>
+                        <th>排名</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rank in ranks %}
+                        <tr>
+                            <td>{{ keyword_rank.asin}} </td>
+                            <td>{{ keyword_rank.word }}</td>
+                            <td>{{ rank.created |date:"Y-m-d" }}</td>
+                            <td>{% if rank.page %} {{ rank.page }} {% else %} 排名20页之外 {%endif%}</td>
+                            <td>{% if rank.number %} {{ rank.number }} {% else %} 排名480名之外 {%endif%}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrajsexternal %}
+    <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="/static/main.js"></script>
+
+    <script type="text/javascript">
+    $('#login_form').submit(function() {
+        $('#gif').css('display', 'block');
+    });
+    </script>
+
+{% endblock %}

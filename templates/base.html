@@ -1,0 +1,202 @@
+{% load inventory_tags %}
+{% load staticfiles %}
+{% load raven %}
+{% load compress %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <title>{% block title %} | {{ site_name }} {% endblock %}</title>
+        <meta name="description" content="最实用的亚马逊导航工具，性价比最高的亚马逊导航工具，为中小型卖家提供实用的工具支持">
+        <meta name="keywords" content="亚马逊导航,亚马逊卖家工具,亚马逊卖家导航,Amazon卖家导航，Amazon卖家实用工具，亚马逊SearchTerm后台关键词查询，亚马逊商品库存跟踪，亚马逊防跟卖，amz668">
+        <meta http-equiv='cache-control' content='no-cache'>
+        <meta http-equiv='expires' content='0'>
+        <meta http-equiv='pragma' content='no-cache'>
+
+        <!-- CSS -->
+        {% compress css %}
+
+        <link href="{% static "css/keyword_rank/base_crawler.css" %}" rel="stylesheet">
+        <link href="{% static "css/keyword_rank/dataTables.css" %}" rel="stylesheet"> <!--css用法-->
+        <link href="{% static 'bootstrap/css/bootstrap.css' %}" rel="stylesheet">
+        <link href="{% static 'bootstrap/css/bootstrap-theme.css' %}" rel="stylesheet">
+        <link href="{% static 'bootstrap/css/sticky-footer-navbar.css' %}" rel="stylesheet">
+        <link href="{% static 'datetimepicker/css/bootstrap-datetimepicker.min.css' %}" rel="stylesheet">
+        <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet">
+        <link href="{% static 'layer/skin/default/layer.css' %}" rel="stylesheet">
+        <link href="{% static 'css/ourtool.css' %}" rel="stylesheet">
+
+        {% block extracss %}{% endblock %}
+        {% endcompress %}
+
+        <!-- Add custom CSS here -->
+        {% block customcss %}
+            <style>
+                body {padding-bottom: 40px;}
+            </style>
+        {% endblock %}
+
+        <!-- Enables 'Add to Homescreen' for Android -->
+        <meta name="viewport" content="width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <link rel="icon" sizes="192x192" href="{% static 'images/icons/icon.jpg' %}">
+        {% block extrahead %}{% endblock %}
+    </head>
+
+    <body>
+        <nav class="navbar navbar-inverse border_radius0_mb0" role="navigation">
+            <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                {% if user.is_authenticated %}
+                <a class="navbar-brand" href="{% url 'index' %}">
+                  <span class="fa"></span>AMZ668</a>
+                {% else %}
+                <a class="navbar-brand" href="/">
+                  <span class="fa"></span>AMZ668</a>
+                {% endif %}
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+              <ul class="nav navbar-nav navbar-right">
+
+                    <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                         <span class="fa fa-bar-chart"></span>&nbsp;功能大全 <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{% url "asin_keyword:asin_submit" %}"> 从商品ASIN获得关键词</a></li>
+                        <li class="divider"></li>
+                        <li><a href="{% url "inventory:inventory_submit" %}">跟踪商品的竞品信息</a></li>
+                        <li class="divider"></li>
+                        <li><a href="{% url "keyword_rank:keyword_list" %}">ASIN的关键词排名跟踪</a></li>
+	                    <li class="divider"></li>
+                        <li><a href="{% url "short_url:url_submit" %}">超链生成</a></li>
+			            <li class="divider"></li>
+                        <li><a href="{% url "follow_sale:product_submit" %}">跟卖管理</a></li>
+	                    <li class="divider"></li>
+                        <li><a href="{% url "review_monitor:product_submit" %}">差评监控</a></li>
+			            <li class="divider"></li>
+                        <li><a href="{% url "rele_keyword:in_word" %}">相关关键词</a></li>
+
+		  </ul>
+                    </li>
+
+                  {% if user.is_authenticated %}
+                    <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <span class="fa fa-user"></span>&nbsp;
+                        {{ user }} <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                    <!--  <li><a href="/actions"  onclick="_czc.push(['_trackEvent', '我的查询记录','首页用户查询记录']);">我的查询记录</a></li>
+                      <li class="divider"></li>-->
+                      <li><a href="{% url 'accounts:password_change' %}">修改密码</a></li>
+                      <li class="divider"></li>
+                      <li><a href="{% url 'accounts:logout' %}">退出</a></li>
+                    </ul>
+                    </li>
+                  {% else %}
+                    <form class="navbar-form navbar-right">
+                    <button type="button" class="btn btn-primary"
+                        onclick="location.href=&quot;{% url 'accounts:login' %}&quot;;">
+                        登录</button>
+                    <button type="button" class="btn btn-success"
+                        onclick="location.href=&quot;{% url 'accounts:signup' %}&quot;;">
+                        注册</button>
+                    </form>
+                  {% endif %}
+              </ul>
+            </div><!-- /.navbar-collapse -->
+          </div><!-- /.container -->
+        </nav>
+
+        {% block rootcontainer %}
+        <div class="container">
+          <div class="row">
+            {% block breadcrumbs %}{% endblock %}
+            <div class="col-lg-12">
+                <div class="page-header">
+                    {% block heading %}{% endblock %}
+                </div>
+                {% block content %}{% endblock %}
+            </div>
+          </div>
+        </div><!-- /.container -->
+        {% endblock %}
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <div class="container">
+                <footer style="text-align: center;">
+            <!--      <p class="pull-right"><a href="#">回到顶部</a></p> -->
+                  <p class="text-muted">
+                      &copy; 2017 AMZ668.COM</a>
+                  <!-- | <a href="{% url 'blog:blog_list_view' %}">博客</a>
+                      | <a href="https://www.facebook.com/glucose.tracker/info">关于</a>
+                      | <a href="mailto:info@glucosetracker.net">联系我们</a> -->
+                  </p>
+                </footer>
+            </div>
+        </div>
+
+        <!-- JavaScript -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="{% static 'jquery/jquery.min.js' %}"></script>
+        <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'momentjs/moment.min.js' %}"></script>
+        <script src="{% static 'layer/layer.js' %}"></script>
+        <script src="{% static 'datetimepicker/js/bootstrap-datetimepicker.min.js' %}"></script>
+        <script src="{% static 'jquery-validation/jquery.validate.js' %}"></script>
+        <script src="{% static 'js/global.js' %}"></script>
+
+	<script src="{% static 'jquery/raven.min.js' %}"></script>
+	<script>Raven.config('https://fba2b3672c064c2fb941b398d52c9c53@sentry.io/163654').install()</script>
+        {% block extrajs %}{% endblock %}
+
+        {% if google_analytics_tracking_id %}
+        <!-- Asynchronous Google Analytics snippet. mathiasbynens.be/notes/async-analytics-snippet -->
+        <script>
+            var _gaq=[['_setAccount','{{ google_analytics_tracking_id }}'],['_trackPageview']];
+            (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+            g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+            s.parentNode.insertBefore(g,s)}(document,'script'));
+        </script>
+        {% endif %}
+
+        {% if intercom_app_id %}
+        <!-- Intercom.io script for user tracking. -->
+        <script id="IntercomSettingsScriptTag">
+          window.intercomSettings = {
+            name: "{{ user }}",
+            email: "{{ user.email }}",
+            created_at: {{ user.date_joined|date:'U' }},
+            app_id: "{{ intercom_app_id }}"
+          };
+        </script>
+        <script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://static.intercomcdn.com/intercom.v1.js';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()</script>
+        {% endif %}
+
+        <!-- Disable submit buttons after click to prevent multiple submissions. -->
+        <script type="text/javascript">
+            $(function () {
+                $('form').submit(function(){
+                    $(this).find('input[type=submit]').prop('disabled', true);
+                });
+            });
+        </script>
+
+
+
+       {% block extrajsexternal %}{% endblock %}
+    </body>
+</html>

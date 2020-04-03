@@ -1,0 +1,37 @@
+{% extends 'blog/blog_base.html' %}
+{% load inventory_tags %}
+{% block title %}{{ blog.title }} | {{ site_name }}{% endblock %}
+
+{% block heading %}
+    <h2>{{ blog.title }}</h2>
+    <small>
+      <span class="text-muted">{% if blog.is_published %}<span class="fa fa-calendar"></span> {{ blog.date_published|date:'F j, Y' }}{% else %}{{ blog.status|capfirst }}{% endif %} by {{ blog.author.username }}</span>
+    </small>
+{% endblock %}
+
+{% block content %}
+    <div class="addthis_native_toolbox body" style="padding-bottom:10px;"></div>
+
+    <!-- Top Ad -->
+    {% if ad_top %}
+        {{ ad_top.code|safe }}
+    {% endif %}
+
+    <div style="font-size:15px;line-height:25px;">{{ blog.content|safe }}</div>
+
+    <!-- Bottom Ad -->
+    {% if ad_bottom %}
+        {{ ad_bottom.code|safe }}
+    {% endif %}
+
+    <div>
+    {% if blog.tags.exists %}
+        <p><span class="fa fa-tags"></span> <strong>Tags:</strong> {% for tag in blog.tags.values %}<a href="{% url 'blog:blog_tag_list_view' tag.slug %}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+    {% endif %}
+    </div>
+
+{% endblock %}
+
+{% block extrapanelsbefore %}
+
+{% endblock %}

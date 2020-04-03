@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block title %} {{ product.title|truncatewords:7 }}的跟卖 | {{ site_name }}{% endblock %}
+{% load static %}
+
+{% block rootcontainer %}
+<div class="container">
+    <div id="content">
+        {% if messages %} <!--messages的用法-->
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">
+                        {{ message|safe }} <!--safe的用法-->
+                        <a href="#" class="close">×</a>
+                    </li>
+                {% endfor %}
+                <br><br>
+            </ul>
+        {% endif %}
+
+</div>
+<div class="container">
+    <div class="col-sm-12">
+    <div class="row-sm-12 col-sm-offset-1">
+        <br>
+        <h4>{{ product.title|truncatewords:7 }}的跟卖商家：</h4>
+        <div style="overflow: auto;">
+            <table id="sellers" class="display" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>商家ID</th>
+                        <th>商家</th>
+                        <th>价格</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for Product_seller in Product_sellers %}
+                        <tr>
+                            <td>{% ifequal Product_seller.sell_url 'http://www.amz668.com/follow_sale/' %}
+                                {{ Product_seller.seller_id }}
+                            {% else %}<a href="{{Product_seller.sell_url}}" target="_blank">{{ Product_seller.seller_id }}</a> {% endifequal %}</td>
+                            <td>{% ifequal Product_seller.sell_url 'http://www.amz668.com/follow_sale/' %}
+                                {{ Product_seller.name }}
+                            {% else %}<a href="{{Product_seller.sell_url}}" target="_blank">{{ Product_seller.name }}</a> {% endifequal %}</a></td>
+                            <td>{{ Product_seller.price }}</td>
+			</tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <h4>{{ product.title|truncatewords:7 }}的跟卖变化：</h4>
+        <div style="overflow: auto;">
+            <table id="change" class="display" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>商家ID</th>
+                        <th>商家</th>
+                        <th>价格</th>
+                        <th>变化时间</th>
+                        <th>状态</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for seller_change in seller_changes %}
+                        <tr>
+                            <td>{{ seller_change.seller_id }} </td>
+                            <td>{{ seller_change.name }}</td>
+                            <td>{{ seller_change.price }}</td>
+                            <td>{{ seller_change.created }}</td>
+                            <td>{{ seller_change.status }}</td>
+			</tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+    </div>
+</div>
+</div>
+{% endblock %}
+
+{% block extrajsexternal %}
+    <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+    <!--<script type="text/javascript" src="/static/main.js"></script>-->
+{% endblock %}

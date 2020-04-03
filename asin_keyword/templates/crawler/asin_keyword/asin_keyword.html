@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block title %} {{ asin_keyword.title|truncatewords:7 }}的Search Terms | {{ site_name }}{% endblock %}
+{% load static %}
+{% block extracss %}
+   <style>
+
+   </style>
+{% endblock %}
+{% block rootcontainer %}
+ <div class="search_description">
+     {% if user.is_authenticated %}
+        <span>当前剩余积分：<i class="red">{{user.settings.credit}}</i></span>
+        <span class="buy">积分不够？<a href="{% url 'payment:recharge' %}" target="_blank">立即购买</a></span>
+        <span>每次查询消耗<i class="red">&nbsp;4&nbsp;</i>积分，24小时内查询同一个Asin，只消耗一次积分</span>
+    {% else %}
+    <span>新用户免费获得100积分,每次查询消耗<i class="red">&nbsp;4&nbsp;</i>积分，24小时内查询同一个Asin，只消耗一次积分</span>
+    {% endif %}
+</div>
+<div class="container"><!--dsdsdds-->
+    <div id="content">
+        {% if messages %} <!--messages的用法-->
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">
+                        {{ message|safe }} <!--safe的用法-->
+                        <a href="#" class="close">×</a>
+                    </li>
+                {% endfor %}
+                <br><br>
+            </ul>
+        {% endif %}
+    <div class="row">
+        <div class="col-lg-12">
+            <form action="." method="post" onsubmit="showLoading();" id="login_form">
+                <div class="search_box">
+                    <input id="id_asin" class="select_input" maxlength="100" name="asin" placeholder="请输入ASIN" type="text" required="">
+                    <!-- <label for="id_country">Country:</label> -->
+                    <select  class="search_select" id="id_country" name="country" required="">
+                        <option value="us" selected="selected">美国</option>
+                        <option value="ca">加拿大</option>
+                        <option value="fr">法国</option>
+                        <option value="de">德国</option>
+                        <option value="it">意大利</option>
+                        <option value="jp">日本</option>
+                        <option value="es">西班牙</option>
+                        <option value="uk">英国</option>
+                    </select>
+                     {% csrf_token %}
+                <input type="submit"  class="btn btn-success" value="从ASIN获得Search Terms">
+                </div>
+            </form>
+        </div>
+
+        <div class="col-lg-12 ">
+            <img src="{% static "images/spin.gif" %}" id="gif" style="display: none; margin: 0 auto; width: 100px; /*visibility: hidden;*/">
+        </div>
+    </div>
+
+</div>
+
+    <div class="col-sm-12">
+    <div class="row-sm-12 col-sm-offset-1">
+        <br>
+
+
+        <div style="overflow: auto;">
+            <table id="change" class="display" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th width="10%">国别</th>
+                        <th width="10%">ASIN</th>
+                        <th width="30%">商品名称</th>
+                        <th width="10%">EAN</th>
+                        <th width="40%">关键词列表</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ asin_keyword.get_country_display }} </td>
+                        <td>{{ asin_keyword.asin }} </td>
+                        <td>{{ asin_keyword.title }}</td>
+                        <td>{{ asin_keyword.ean }}</td>
+                        <td>
+                            {% if asin_keyword.keyword == "[]" %}
+                              卖家没有设定关键词
+                            {% else %}
+                              {{ asin_keyword.keyword|cut:"['"|cut:"']"|cut:'"]'|cut:'["' }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrajsexternal %}
+    <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="/static/main.js"></script>
+
+    <script type="text/javascript">
+    $('#login_form').submit(function() {
+        $('#gif').css('display', 'block');
+    });
+    </script>
+{% endblock %}

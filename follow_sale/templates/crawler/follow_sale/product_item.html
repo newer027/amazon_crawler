@@ -1,0 +1,74 @@
+{% load follow_sale_tags %}
+
+<div class="user clearfix" style="position: relative;">
+        <img class="user-detail" src="{% if product.img_url %}{{ product.img_url }}{% else %}{{ 'http://www.amz668.com/static/images/icons/icon.jpg' }}{% endif %}" width=50 style="width:50px; height:50px;">
+        <a class="products_title1" href="{{product.detail_page_url}}">{{ product.title }}</a>
+        <a class="products_title" href="javascript:;" id="{{product.id}}"  onclick="amz668.viewInventory(this.id);return false;"><i class="fa fa-bar-chart" aria-hidden="true"></i>当前卖家</a>
+
+
+    <span class="products_id">{{product.get_country_display}}:{{product.asin}}</span>
+    {% count_change product as change %}
+    {% if change %}
+    <a class="in_stock" href="javascript:;" id="change_{{product.id}}"  onclick="amz668.viewInventory(this.id);return false;"><i class="fa fa-bar-chart" aria-hidden="true"></i>{{ change }}次跟卖</a>
+    {% else %}<span class="in_stock">正在获取跟卖信息</span> {% endif %}
+
+    {% days_remain product request.user as days %}
+    <span class="day_num">剩余天数:{{ days }} </span>
+    <a href="/follow_sale/more_monitor/{{ product.id }}" class="renewal_btn" onclick="">续期</a>
+   <!--  <a href="javascript:;" class="refresh_btn" onclick="amz668.refreshInventory(this)">刷新</a> -->
+    <a href="/follow_sale/delete/{{ product.id }}" class="del_btn"  data="{{ product.asin }}" onclick="">删除</a>
+
+
+    <div id="id_{{product.id}}" style="display: none">
+    <table id="change" class="display dataTable no-footer" cellspacing="0" role="grid" aria-describedby="change_info" style="width: 100%;">
+        <thead>
+            <tr role="row"><th class="sorting" tabindex="0" aria-controls="change" rowspan="1" colspan="1" aria-label="商家ID: activate to sort column ascending" style="width: 50px;">商家ID</th>
+                <th class="sorting" tabindex="0" aria-controls="change" rowspan="1" colspan="1" aria-label="商家: activate to sort column ascending" style="width: 20px;">商家</th>
+                <th class="sorting" tabindex="0" aria-controls="change" rowspan="1" colspan="1" aria-label="价格: activate to sort column ascending" style="width: 20px;">价格</th></tr>
+        </thead>
+        <tbody id="result">
+            {% product_seller product as sellers %}
+            {%for seller in sellers%}
+            <tr role="row" class="odd">
+                <td>{% ifequal seller.sell_url 'http://www.amz668.com/follow_sale/' %}
+                                {{ seller.seller_id }}
+                            {% else %}<a href="{{seller.sell_url}}" target="_blank">{{ seller.seller_id }}</a> {% endifequal %}</td>
+                <td>{% ifequal seller.sell_url 'http://www.amz668.com/follow_sale/' %}
+                                {{ seller.name }}
+                            {% else %}<a href="{{seller.sell_url}}" target="_blank">{{ seller.name }}</a> {% endifequal %}</td>
+                <td>{{ seller.price }}</td>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+
+
+    <div id="id_change_{{product.id}}" style="display: none">
+    <table class="display dataTable no-footer" cellspacing="0" role="grid" aria-describedby="change_info" style="width: 100%;">
+        <thead>
+            <tr role="row"><th class="sorting" tabindex="0" aria-controls="change" rowspan="1" colspan="1" aria-label="商家ID: activate to sort column ascending" style="width: 50px;">商家ID</th>
+                <th class="sorting" tabindex="0" aria-controls="change" rowspan="1" colspan="1" aria-label="商家: activate to sort column ascending" style="width: 20px;">商家</th>
+                <th class="sorting" tabindex="0" aria-controls="change" rowspan="1" colspan="1" aria-label="价格: activate to sort column ascending" style="width: 20px;">价格</th>
+                <th class="sorting" tabindex="0" aria-controls="change" rowspan="1" colspan="1" aria-label="价格: activate to sort column ascending" style="width: 20px;">跟卖时间</th></tr>
+        </thead>
+        <tbody>
+            {% seller_change product as changes %}
+            {% for change in changes %}
+            <tr role="row" class="odd">
+
+                <td>{% ifequal change.sell_url 'http://www.amz668.com/follow_sale/' %}
+                                {{ change.seller_id }}
+                            {% else %}<a href="{{change.sell_url}}" target="_blank">{{ change.seller_id }}</a> {% endifequal %}
+                </td>
+                <td>{% ifequal change.sell_url 'http://www.amz668.com/follow_sale/' %}
+                                {{ change.name }}
+                            {% else %}<a href="{{change.sell_url}}" target="_blank">{{ change.name }}</a> {% endifequal %}</td>
+                <td>{{ change.price }}</td>
+                <td>{{ change.created }}</td>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+
+
+</div>

@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load asin_detail_tags %}
+
+{% load static %}
+{% block title %}批量从商品ASIN获得详情 | {{ site_name }}{% endblock %}
+{% block extracss %}
+{% endblock %}
+{% block rootcontainer %}
+<div class="container">
+    {% if messages %}
+     <ul class="messages">
+       {% for message in messages %}
+         <li class="{{ message.tags }}">
+            {{ message|safe }}
+            <a href="#" class="close">✖</a>
+         </li>
+       {% endfor %}
+     </ul>
+   {% endif %}
+
+<div class="row">
+    <div class="col-lg-12">
+        <br>
+        <form action="." method="post" onsubmit="showLoading();" id="login_form">
+                {{ form.as_p }}
+                {% csrf_token %}
+            <input type="submit" class="btn btn-success" value="从ASIN获得商品详情" onclick="get();">
+        </form>
+    </div>
+
+    <div class="col-lg-12 ">
+        <img src="{% static "images/spin.gif" %}" id="gif" style="display: none; margin: 0 auto; width: 100px; /*visibility: hidden;*/">
+    </div>
+    <br>
+    {% if asin_details %}
+    {% latest_inven request.user.id as number %}
+        结果的数目:{{ number }}
+    <form method="post" id="changelist-form">
+        {% csrf_token %}
+        <button type="submit" class="button" title="Run the selected action" name="index" value="0">批量删除</button>
+        <div style="overflow: auto;">
+            <table id="change" class="display" cellspacing="0" width="98%">
+                <thead>
+                    <tr>
+                        <th width="3%">操作</th>
+                        <th width="6%">国家</th>
+                        <th width="28%">图片</th>
+                        <th width="8%">ASIN</th>
+                        <th width="18%">商品名称</th>
+                        <th width="6%">价格</th>
+                        <th width="6%">BSR</th>
+                        <th width="10%">商标</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% if asin_details %}{% include "crawler/action/pagination.html" with page=asin_details %}{% endif %}
+                {% for asin_detail in asin_details %}
+                    <tr id="item">
+                        <td><input type="checkbox" name="delete" value="{{ asin_detail.pk }}"></td>
+                        <td>{{ asin_detail.get_country_display }} </td>
+                        <td><img src="{% if asin_detail.img_url %}{{ asin_detail.img_url }} {% endif %}"></td>
+                        <td > <a href="{{asin_detail.detail_page_url}}" target="_blank">{{ asin_detail.asin }} </a> </td>
+                        <td>{{ asin_detail.title }} </td>
+                        <td>{{ asin_detail.price }}</td>
+                        <td>{{ asin_detail.bsr_rank }}</td>
+                        <td>{{ asin_detail.brand }} ({{ asin_detail.label }})</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </form>
+    {% endif %}
+</div>
+</div>
+{% endblock %}

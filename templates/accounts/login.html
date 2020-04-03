@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% block extracss %}
+<link href="{% static 'bootstrap/css/signin.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block rootcontainer %}
+<div class="container">
+
+
+{% if next %}
+<form class="form-signin" name="loginform" action="/accounts/login/?next={{next}}" method="post" >
+{%else%}
+<form class="form-signin" name="loginform" action="/accounts/login/" method="post" >
+{% endif %}
+
+    {% csrf_token %}
+    {% if next %}
+      <input type="hidden" name="next" value="{{ next }}" />
+    {% endif %}
+    <h2 class="form-signin-heading">登录到AMZ668</h2>
+    <input type="text" id="username" name="username" class="form-control"
+           placeholder="请输入用户名或邮箱" required autofocus>
+    <input type="password" id="password" name="password" class="form-control"
+           placeholder="请输入密码" required>
+    {% if login_failed %}
+      <p class="text-danger">对不起，您的登录信息有误，请重新登录！！！</p>
+    {% endif %}
+    <input type="submit" name="submit" value="登录" class="btn btn-lg btn-primary btn-block"/>
+    <br>
+    <p class="text-right">
+        <a href="{% url 'accounts:password_reset' %}">忘记密码？</a>
+    </p>
+  </form>
+</div>
+{% endblock %}

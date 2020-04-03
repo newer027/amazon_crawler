@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block title %}从商品ASIN获得Search Terms | {{ site_name }}{% endblock %}
+{% block extracss %}
+{% endblock %}
+{% block rootcontainer %}
+ <div class="search_description">
+     {% if user.is_authenticated %}
+        <span>当前剩余积分：<i class="red">{{user.settings.credit}}</i></span>
+        <span class="buy">积分不够？<a href="{% url 'payment:recharge' %}" target="_blank">立即购买</a></span>
+        <span>每次查询消耗<i class="red">&nbsp;4&nbsp;</i>积分，24小时内查询同一个Asin，只消耗一次积分</span>
+    {% else %}
+    <span>新用户免费获得100积分,每次查询消耗<i class="red">&nbsp;4&nbsp;</i>积分，24小时内查询同一个Asin，只消耗一次积分</span>
+    {% endif %}
+        <span class="buy"><a href="/blog/review-monitor/"><i class="fa fa-lightbulb-o" aria-hidden="true"></i>&nbsp;使用说明</a></span>
+ </div>
+<div class="container">
+
+    {% if messages %}
+     <ul class="messages">
+       {% for message in messages %}
+         <li class="{{ message.tags }}">
+            {{ message|safe }}
+            <a href="#" class="close">&times;</a>
+         </li>
+       {% endfor %}
+     </ul>
+   {% endif %}
+
+<div class="row">
+    <div class="col-lg-12">
+
+        <form action="." method="post" id="log_form">
+            <div class="search_box">
+                <input id="id_asin" class="select_input" maxlength="100" name="asin" placeholder="请输入ASIN" type="text" required="">
+                <!-- <label for="id_country">Country:</label> -->
+                <select  class="search_select" id="id_country" name="country" required="">
+                    <option value="us" selected="selected">美国</option>
+                    <option value="ca">加拿大</option>
+                    <option value="fr">法国</option>
+                    <option value="uk">英国</option>
+                    <option value="de">德国</option>
+                    <option value="it">意大利</option>
+                    <option value="jp">日本</option>
+                    <option value="es">西班牙</option>
+                </select>
+                 {% csrf_token %}
+            <input type="submit" id="st" class="btn btn-success" value="从ASIN获得Search Terms" onclick="get();">
+            </div>
+        </form>
+    </div>
+
+    <div class="col-lg-12 ">
+        <img src="{% static "images/spin.gif" %}" id="gif" style="display: none; margin: 0 auto; width: 100px; /*visibility: hidden;*/">
+    </div>
+
+
+        <div style="overflow: auto;display:none;" id="resultDiv">
+            <table id="change" class="display" cellspacing="0" width="98%">
+                <thead>
+                    <tr>
+                        <th width="4%">国家</th>
+                        <th width="6%">图片</th>
+                        <th width="8%">ASIN</th>
+                        <th width="40%">商品名称</th>
+                        <th width="40%">关键词列表</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr id="result">
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+</div>
+</div>
+<input type="hidden" id="invoke" value="doAjax"/>
+
+{% endblock %}
+
+{% block extrajsexternal %}
+<script type="text/javascript">
+ $('#login_form').submit(function() {
+     $('#gif').css('display', 'block');
+ });
+
+// invoke function
+$(document).ready(function() {
+    var fn = $("#invoke").val();
+    amz668[fn]();
+});
+</script>
+{% endblock %}

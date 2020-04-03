@@ -1,0 +1,9 @@
+amazon_id_1={'asso_id':'AKIAJYYZPI36ZGM63ZCQ','asso_key':'QKzHQsIgTfeq60TsdEqtXDeWvT8ZK0HbSkCYbIUV',
+             'us':'newer000b-20','uk':'newer0270b-21','de':'newer02709db-21','fr':'newer0270db-21success',
+             'es':'newer0008-21','it':'newer00-21','jp':'newer2208-22','ca':'nwer00-20'}
+amazon_id_2={'asso_id':'AKIAJC5JZHBFBM2HDW6Q','asso_key':'k6kcmFEJWlLADy3HBGmp92FQWU7cejksG03lvIKx',
+             'us':'newer110f-20','uk':'newer1100f7-21','de':'newer1108-21','fr':'newer110f7-21',
+             'es':'newer110f4-21','it':'newer110f8-21','jp':'newer11-22','ca':'newer1103-20'}
+amazon_id_3={'asso_id':'AKIAJX6SX7FA27GTNSMQ','asso_key':'1qNhsxdEwE9+XS03trCy3i+T1+clUE6535ySOTx1',
+             'us':'newer22-20','uk':'newer2209-21','de':'newer220c-21','fr':'newer2205-21',
+             'es':'','it':'newer220f-21','jp':'newer2202-22','ca':'newer2200-20'}

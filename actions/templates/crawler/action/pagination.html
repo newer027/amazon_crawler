@@ -1,0 +1,27 @@
+<!--在list.html中被include-->
+<nav class="pull-right" style="margin-right: 40px;">
+    <ul class="pagination">
+        <!--如果有前一页,显示前一页的链接-->
+        {% if page.has_previous %}
+            <li>
+              <a href="?page={{ page.previous_page_number }}" aria-label="Previous">
+                <span aria-hidden="true">上一页</span>
+              </a>
+            </li>
+        {% endif %}
+        <li class="disabled">
+            <!--当前页数,共有页数-->
+            <a>
+                第 {{ page.number }} 页，共 {{ page.paginator.num_pages }} 页
+            </a>
+        </li>
+        <!--如果有后一页,显示后一页的链接-->
+        {% if page.has_next %}
+            <li>
+              <a href="?page={{ page.next_page_number }}" aria-label="Next">
+                <span aria-hidden="true">下一页</span>
+              </a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>

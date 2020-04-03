@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+    <!--使用utf-8字符集-->
+    <meta charset="utf-8" />
+    <title>把URL中的商品添加到心愿单</title> <!--title用法-->
+    <link rel="icon" type="image/jpg" href="{% static "images/icon.jpg" %}"/>
+    <link href="{% static "css/keyword_rank/base_crawler.css" %}" rel="stylesheet"> <!--css用法-->
+    <!-- 可选的Bootstrap主题文件（一般不使用） -->
+</head>
+<body>
+    <div id="header">
+        <span class="logo"><a>把URL中的商品添加到心愿单</a></span>
+        <a class="nav navbar-nav navbar-right" href="{% url 'index' %}">返回主页</a>
+    </div>
+
+    <div id="content">
+        {% if messages %} <!--messages的用法-->
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">
+                        {{ message|safe }} <!--safe的用法-->
+                        <a href="#" class="close">×</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <form action="." method="post">
+            {{ form.as_p }}
+            {% csrf_token %}
+            <input type="submit" value="添加URL">
+        </form>
+
+        <ul class="messages"><li class="success">已经提交的URL</li></ul>
+        <div id="people-list">
+            {% for url in urls %}
+                <div class="user">
+                    <a id="name" href="{{ url.url }}">{{ url.url }}</a>
+                    <br>
+                    <a class="small">{% if url.add %}已经添加到心愿单{% else %}还没有添加到心愿单{% endif %}
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+    <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+</body>
+</html>

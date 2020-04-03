@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}我的文件夹{% endblock %}
+
+{% block content %}
+    <h1>我的文件夹</h1>
+
+    <div class="module">
+        {% for file in object_list %}
+            <div class="course-info">
+                <a href="{% url "upload:file_detail" file.id%}">{{ file.document.name |cut:"static/documents/"}}</a>
+                <a href="{% url "upload:file_delete" file.id %}">Delete</a>
+                <p>
+                    <a>文件信息:{{ file.description }}</a>
+                    <a>上传日期:{{ file.uploaded_at| date:"Y-m-d" }}</a>
+                </p>
+            </div>
+        {% empty %}
+            <p>You haven't created any files yet.</p>
+        {% endfor %}
+            <p>
+                <a href="{% url "upload:file_create" %}" class="button">添加文件</a>
+            </p>
+    </div>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block title %} 从商品ASIN获得跟卖信息 | {{ site_name }}{% endblock %}
+{% load static %}
+
+{% block rootcontainer %}
+    <div class="search_description">
+     {% if user.is_authenticated %}
+        <span>当前剩余积分：<i class="red">{{user.settings.credit}}</i></span>
+        <span class="buy">积分不够？<a href="{% url 'payment:recharge' %}" target="_blank">立即购买</a></span>
+    <span>每跟踪一个月跟卖信息消耗<i class="red">&nbsp;6&nbsp;</i>积分</span>
+    {% else %}
+    <span>新用户免费获得100积分,每跟踪一个月消耗<i class="red">&nbsp;6&nbsp;</i>积分</span>
+    {% endif %}
+        <span class="buy"><a href="/blog/genmaiguanli/"><i class="fa fa-lightbulb-o" aria-hidden="true"></i>&nbsp;使用说明</a></span>
+    </div>
+
+<div class="container">
+    <div id="content">
+        {% if messages %} <!--messages的用法-->
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">
+                        {{ message|safe }} <!--safe的用法-->
+			<a href="javascript:;" class="close" >&times;</a>                        
+            </li>
+                {% endfor %}
+                <br><br>
+            </ul>
+        {% endif %}
+        </div>
+<div class="row">
+
+        <div class="col-lg-12 ">
+            <div class="search_box">
+                <form action="." method="post" onsubmit='showLoading();' id="login_form">
+                <!--  <label for="id_asin">Asin:</label>  -->
+                <input id="id_asin" class="search_input" placeholder="请输入ASIN" maxlength="100" name="asin" type="text" required="">
+                    <select  class="search_select" id="id_country" name="country" required="">
+                    <option value="us" selected="selected">美国</option>
+                    <option value="ca">加拿大</option>
+                    <option value="fr">法国</option>
+                    <option value="de">德国</option>
+                    <option value="it">意大利</option>
+                    <option value="es">西班牙</option>
+                    <option value="uk">英国</option>
+                    <option value="jp">日本</option>
+                </select>
+	            {% csrf_token %}
+                <input type="submit" style="width:196px" value="跟踪ASIN的跟卖信息" onclick="get();"/>
+            </form>
+            </div>
+        </div>
+
+        <div class="col-lg-4 ">
+        <img src="{% static "images/spin.gif" %}" id="gif" style="display: none; margin: 0 auto; width: 100px; /* visibility: hidden; */"></div>
+</div>
+
+        <ul class="messages"><li class="success">正在跟卖的商品(出现跟卖时,您会收到邮件提醒)</li></ul>
+    {% if products %}{% include "crawler/action/pagination.html" with page=products %}{% endif %}
+
+    <div id="people-list">
+        {% for product in products %}
+            {% include "crawler/follow_sale/product_item.html" with product=product %}
+        {% endfor %}
+    </div>
+
+
+
+
+</div>
+{% endblock %}
+
+{% block extrajsexternal %}
+<script type="text/javascript">
+$('#login_form').submit(function() {
+    $('#gif').css('visibility', 'visible');
+});
+</script>
+{% endblock %}

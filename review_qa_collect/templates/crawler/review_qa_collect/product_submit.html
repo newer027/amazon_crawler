@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %} 从商品ASIN获得评论和问答信息 | {{ site_name }}{% endblock %}
+{% load static %}
+
+{% block rootcontainer %}
+<div class="container">
+    <div id="content">
+        {% if messages %} <!--messages的用法-->
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">
+                        {{ message|safe }} <!--safe的用法-->
+                        <a href="#" class="close">×</a>
+                    </li>
+                {% endfor %}
+                <br><br>
+            </ul>
+        {% endif %}
+        </div>
+    <div class="row">
+        <div class="col-lg-12 ">
+            <form action="." method="post">
+                {{ form.as_p }}
+                {% csrf_token %}
+                <input type="submit" class="btn btn-success" value="采集ASIN的评论和QA">
+            </form>
+        </div>
+        <div class="col-lg-12 ">
+            <img src="{% static "images/spin.gif" %}" id="gif" style="display: none; margin: 0 auto; width: 100px; /* visibility: hidden; */">
+        </div>
+    </div>
+        <ul class="messages"><li class="success">正在跟踪评论和问答的商品</li>
+        </ul>
+        {% if products %}{% include "crawler/action/pagination.html" with page=products %}{% endif %}
+
+    <div id="people-list">
+        {% for product in products %}
+            {% include "crawler/review_qa_collect/product_item.html" with product=product %}
+        {% endfor %}
+    </div>
+
+
+
+
+</div>
+{% endblock %}
+
+{% block extrajsexternal %}
+<script type="text/javascript">
+$('#login_form').submit(function() {
+    $('#gif').css('visibility', 'visible');
+});
+</script>
+{% endblock %}

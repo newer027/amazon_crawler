@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block title %}请重新查询 | {{ site_name }}{% endblock %}
+
+{% block rootcontainer %}
+
+<ul class="messages"><li class="success">发生网络错误,请稍后再次查询.这次查询没有扣除您的积分.</li></ul>
+<li>
+    <a href="{% url "inventory:inventory_submit" %}" target="blank">从ASIN跟踪库存</a>
+</li>
+<li>
+    <a href="{% url "asin_keyword:asin_submit" %}" target="blank">从ASIN得到Search Terms</a>
+</li>
+{% endblock %}

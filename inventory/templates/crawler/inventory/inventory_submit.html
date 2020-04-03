@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% block title %} 从商品ASIN获得竞品信息 | {{ site_name }}{% endblock %}
+{% load static %}
+{% load inventory_tags %}
+{% block extracss %}
+{% endblock %}
+{% block rootcontainer %}
+    <div class="search_description">
+     {% if user.is_authenticated %}
+        <span>当前剩余积分：<i class="red">{{user.settings.credit}}</i></span>
+        <span class="buy">积分不够？<a href="{% url 'payment:recharge' %}" target="_blank">立即购买</a></span>
+    <span>免费查询竞品信息,每跟踪一个月消耗<i class="red">&nbsp;6&nbsp;</i>积分</span>
+    {% else %}
+    <span>新用户免费获得100积分,免费查询竞品信息,每跟踪一个月消耗<i class="red">&nbsp;6&nbsp;</i>积分</span>
+    {% endif %}
+        <span class="buy"><a href="/blog/whatissuperurl/"><i class="fa fa-lightbulb-o" aria-hidden="true"></i>&nbsp;帮助中心</a></span>
+    </div>
+<div class="container">
+    <div id="content">
+        {% if messages %} <!--messages的用法-->
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">
+                        {{ message|safe }} <!--safe的用法-->
+                        <a href="#" class="close">×</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+<div class="row">
+        <div class="col-lg-12 ">
+            <div class="search_box">
+                <form action="." method="post" id="login_form">
+                <!--  <label for="id_asin">Asin:</label>  -->
+                <input id="id_asin" class="search_input" placeholder="请输入ASIN" maxlength="100" name="asin" type="text" required="">
+                    <select  class="search_select" id="id_country" name="country" required="">
+                    <option value="us" selected="selected">美国</option>
+                    <option value="ca">加拿大</option>
+                    <option value="jp">日本</option>
+                    <option value="fr">法国</option>
+                    <option value="uk">英国</option>
+                    <option value="de">德国</option>
+                    <option value="it">意大利</option>
+                    <option value="es">西班牙</option>
+                </select>
+                {% csrf_token %}
+                <input type="submit" style="width:196px" value="获得竞品信息" onclick="get();">
+            </form>
+            </div>
+            <p style="text-align: center;margin-top: -20px;">（PS：获得竞品信息后，可对商品进行持续跟踪）</p>
+        </div>
+        <div class="col-lg-12 ">
+        <img src="{% static "images/spin.gif" %}" id="gif" style="display: none; margin: 0 auto; width: 100px; /* visibility: hidden; */">
+        </div>
+</div>
+    <div class="row-sm-12 col-sm-offset-1">
+    {% if inventory %}
+        <div style="overflow: auto;">
+            <table id="change" class="display" cellspacing="0" width="90%">
+                <thead>
+                    <tr>
+                        <th width="20%">ASIN</th>
+                        <th width="28%">商品名称</th>
+                        <th width="7%">库存</th>
+                        <th width="11%">bsr排名</th>
+                        <th width="9%">价格{{ inventory_time.price_unit }}</th>
+                        <th width="10%">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td align="center"><img src="{{ inventory.img_url }}" width=70 > &emsp;{{ inventory.asin }} </td>
+                        <td align="center">{{ inventory.title }}</td>
+                        <td align="center">{% ifequal inventory.inventory  999 %}999+{% else %}{{ inventory.inventory }}{% endifequal %}</td>
+                        <td align="center">{{ inventory_time.bsr_rank }}</td>
+                        <td align="center">{{ inventory_time.price }}</td>
+                        <td align="center">
+                            {% if not inventory_to_user %}
+                                <a href="javascript:;" data-id="{{ inventory.id }}" data-action="add_monitor"  class="add_monitor add_btn" onclick="javascript:layer.msg('添加成功！', {icon: 1});">添加到跟踪竞品 </a>
+                            {% else %}
+                                 <span>正在跟踪竞品信息</span>
+                            {% endif %}
+                        </td>
+                     </tr>
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+    </div>
+        <ul class="messages"><li class="success">正在跟踪竞品信息的商品(每天凌晨3:00更新信息)</li></ul>
+    {% if inventorys %}{% include "crawler/action/pagination.html" with page=inventorys %}{% endif %}
+        <div id="people-list">
+            {% for inventory in inventorys %}
+                {% include "crawler/inventory/inventory_item.html" with inventory=inventory %}
+            {% endfor %}
+        </div>
+</div>
+{% endblock %}
+{% block extrajsexternal %}
+<script src=" http://cdn.jsdelivr.net/jquery.cookie/1.4.1/jquery.cookie.min.js "></script>
+<script>
+     var csrftoken = $.cookie('csrftoken');
+     function csrfSafeMethod(method) {
+       // these HTTP methods do not require CSRF protection
+       return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+     }
+     $.ajaxSetup({
+       beforeSend: function(xhr, settings) {
+         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+           xhr.setRequestHeader("X-CSRFToken", csrftoken);
+} }
+});
+$(document).ready(function(){
+$('a.add_monitor').click(function(e){
+    e.preventDefault();
+    $.post('{% url "inventory:add_monitor" %}',
+        {
+            id: $(this).data('id')
+        },
+        function(data){
+            if (data['status'] == 'ok')
+            {
+                // toggle link text
+                $('a.add_monitor').text('已经开始跟踪竞品信息');
+                $('a.add_monitor').removeClass('add_monitor');
+                location.reload();
+            }
+            if (data['status'] == 'ko')
+            {
+                // toggle link text
+                $('a.add_monitor').text('因为网站资源有限,允许最多跟踪36条竞品信息.您跟踪的竞品信息已经达到36条.');
+                $('a.add_monitor').removeClass('add_monitor');
+            }
+    });
+});
+     });
+</script>
+<script type="text/javascript">
+$('#login_form').submit(function() {
+    $('#gif').css('display', 'block');
+});
+</script>
+{% endblock %}

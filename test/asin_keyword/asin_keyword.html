@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %} {{ asin_keyword.title|truncatewords:7 }}的Search Terms | {{ site_name }}{% endblock %}
+{% load static %}
+
+{% block rootcontainer %}
+<div class="container">
+    <div id="content">
+        {% if messages %} <!--messages的用法-->
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">
+                        {{ message|safe }} <!--safe的用法-->
+                        <a href="#" class="close">×</a>
+                    </li>
+                {% endfor %}
+                <br><br>
+            </ul>
+        {% endif %}
+<div class="row">
+        <div class="col-lg-4 ">
+            <form action="." method="post" onsubmit='showLoading();' id="login_form">
+                {{ form.as_p }}
+                {% csrf_token %}
+                <input type="submit" value="从ASIN获得Search Terms">
+            </form>
+        </div>
+
+        <div class="col-lg-4 ">
+            <img src="{% static "images/spin.gif" %}" id="gif" style="display: block; margin: 0 auto; width: 100px; visibility: hidden;">
+        </div>
+</div>
+</div>
+
+    <div class="col-sm-12">
+    <div class="row-sm-12 col-sm-offset-1">
+        <br>
+        <h4>{{ asin_keyword.title }}的Search Terms：</h4>
+        <div style="overflow: auto;">
+            <table id="change" class="display" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>ASIN</th>
+                        <th>商品名称</th>
+                        <th>EAN</th>
+                        <th>关键词列表</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ asin_keyword.asin }} </td>
+                        <td>{{ asin_keyword.title }}</td>
+                        <td>{{ asin_keyword.ean }}</td>
+                        <td>{{ asin_keyword.keyword|cut:"['"|cut:"']"|cut:'"]'|cut:'["' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrajsexternal %}
+    <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="/static/main.js"></script>
+{% endblock %}

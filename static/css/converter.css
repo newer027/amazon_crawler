@@ -1,0 +1,269 @@
+﻿* html .clearfix {
+    zoom: 100%
+}
+
+.clearfix {
+    display: block
+}
+
+body {
+    font-family: 'Microsoft YaHei';
+    background: #f4f4f5;
+    color: #2196F3;
+}
+
+input {
+    font-family: arial, helvetica, sans-serif
+}
+
+.container {
+    position: relative;
+    text-align: left;
+    padding-bottom: 0px;
+    margin: 0px auto;
+    padding-left: 0px;
+    width: 900px;
+    padding-right: 0px;
+    overflow: hidden;
+    padding-top: 0px
+}
+
+a {
+    color: #fff;
+    text-decoration: none
+}
+
+a:hover {
+    color: #fff066;
+    text-decoration: underline
+}
+
+.middle {
+    border-bottom: 0px;
+    border-left: 0px;
+    padding-bottom: 0px;
+    margin: 0px auto;
+    padding-left: 0px;
+    width: 960px;
+    padding-right: 0px;
+    border-top: 0px;
+    border-right: 0px;
+    padding-top: 0px;
+}
+
+.special_recommend_periodic {
+    border-bottom: #0049EF 1px solid;
+    text-align: center;
+    border-left: #0049EF 1px solid;
+    padding-bottom: 10px;
+    margin: 0px 0px 10px;
+    padding-left: 10px;
+    width: 938px;
+    padding-right: 10px;
+    float: left;
+    border-top: 0px;
+    border-right: #0049EF 1px solid;
+    padding-top: 10px;
+    background: #fafafa;
+}
+
+.special_column_periodic {
+    border-bottom: 0px;
+    text-align: center;
+    border-left: #0049EF 1px solid;
+    padding-bottom: 0px;
+    line-height: 30px;
+    margin: 0px;
+    padding-left: 10px;
+    width: 938px;
+    padding-right: 10px;
+    background: #2196F3;
+    float: left;
+    height: 30px;
+    color: #fff;
+    font-size: 14px;
+    border-top: #0049EF 1px solid;
+    border-right: #0049EF 1px solid;
+    padding-top: 0px;
+    font-weight: bold;
+}
+
+.special_column_periodic > a + a {
+    margin-left: 50px;
+}
+
+#header {
+    margin-bottom: 6px;
+    overflow: hidden
+}
+
+.con,.title{
+    background:#F4F4F5
+}
+#content {
+    margin: 8px auto;
+    width: 918px
+}
+
+.item {
+    width: 294px;
+    margin-bottom: 8px;
+    float: left;
+    margin-left: 9px;
+    overflow: hidden;
+    _display: inline
+}
+
+.title {
+    line-height: 35px;
+    padding-right: 10px;
+    background-position: right 0px;
+    height: 35px;
+    overflow: hidden
+}
+
+.title span.text {
+    padding-left: 12px;
+    display: block;
+    background-position: 0px -45px;
+    float: left;
+    height: 35px
+}
+
+.box {
+    border-bottom: #0049EF 3px solid;
+    border-left: #0049EF 1px solid;
+    border-top: #0049EF 1px solid;
+    border-right: #0049EF 1px solid
+}
+
+#result h5.title {
+    border-bottom: #0049EF 1px solid;
+    line-height: 33px;
+    margin-bottom: 2px;
+    height: 28px
+}
+input, button, select, textarea {
+    font-family: inherit;
+    font-size: inherit !important;
+    line-height: inherit;
+}
+input, textarea {
+    clear: both;
+    margin: 0;
+    background: f5 !important;
+    border: 1 !important;
+    padding: 0px 5px;
+    font-size: 14px;
+}
+input[type="button"],input[type="reset"] {
+	clear: both;
+    margin: 0;
+    padding: 0px 5px;
+    font-size: 14px;
+	background: #E8E8E0 !important;
+    border: 1px solid #9C9C9C !important;
+}
+#result .con input.int {
+    border-bottom: #07519A 1px solid;
+    border-left: #07519A 1px solid;
+    padding-bottom: 3px;
+    padding-left: 3px;
+    padding-right: 3px;
+	height: 20px;
+    font: bold 12px/14px verdana;
+    background: #fff; 
+    color: #07519a;
+    border-top: #07519A 1px solid;
+    border-right: #07519A 1px solid;
+    padding-top: 3px
+}
+
+#result .con {
+    padding-bottom: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    font-size: 12px;
+    padding-top: 15px
+}
+
+#result .con dl {
+    line-height: 1.8
+}
+
+#result .con hr {
+    border-bottom-style: dashed;
+    border-right-style: dashed;
+    margin: 15px 0px;
+    border-top-style: dashed;
+    border-left-style: dashed
+}
+
+#result .con label {
+    padding-right: 5px;
+    cursor: pointer
+}
+
+#result .con table {
+    border-left: #07519A 1px solid;
+    margin-top: 10px;
+    border-spacing: 0;
+    width: 100%;
+    border-collapse: collapse;
+    border-top: #07519A 1px solid
+}
+
+#result .con table a {
+    color: #000
+}
+
+#result .con th {
+    border-bottom: #07519A 1px solid;
+    text-align: center;
+    line-height: 25px;
+    height: 25px;
+    vertical-align: middle;
+    border-right: #07519A 1px solid
+}
+
+#result .con td {
+    border-bottom: #07519A 1px solid;
+    text-align: center;
+    line-height: 25px;
+    height: 25px;
+    vertical-align: middle;
+    border-right: #07519A 1px solid
+}
+
+#result .con td {
+    font-size: 12px
+}
+
+#result .con th {
+    background: #ecf1f9
+}
+
+#result .con td.desc {
+    text-align: left;
+    padding-bottom: 0px;
+    padding-left: 10px;
+    width: 250px;
+    padding-right: 10px;
+    padding-top: 0px
+}
+
+#result .con tr.db td {
+    background: #f1f5fb
+}
+
+#result .con .bg {
+    padding-bottom: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    background: #fff;
+    padding-top: 5px;
+    _height: 1%
+}
+.footer {
+    position: initial;
+}

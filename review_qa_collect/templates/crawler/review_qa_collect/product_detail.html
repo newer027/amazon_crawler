@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block title %} {{ product.title|truncatewords:7 }}的差评 | {{ site_name }}{% endblock %}
+{% load static %}
+
+{% block rootcontainer %}
+<div class="container">
+    <div class="row" style="margin:40px 10px 10px 10px;">
+        <img src="{% if product.img_url %}{{ product.img_url }} {% endif %}" style="margin:7px; width: 130px; float:left"><br>
+        <div ><a href="{{ product.detail_page_url }}" target="_blank">{{ product.title }}</a>
+        <br><span class="in_stock">{{ product.get_country_display }}: {{ product.asin }}</span>
+        <br><span class="in_stock">价格: {{ product.price }}</span>
+        <br><span class="in_stock">BSR: {{ product.bsr_rank }}</span></div>
+    </div>
+        <h4 style="border-bottom: 2px solid #dddddd; margin:7px; padding:29.5px;">{{ product.title|truncatewords:7 }}的评论：</h4>
+        <a style="color: red" href="{% url 'review_qa_collect:review_csv_view' product.pk %}" target="_blank">下载CSV</a>
+        {% if reviews %}{% include "crawler/action/pagination.html" with page=reviews %}{% endif %}
+
+        <div>
+            <table class="display" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>采集日期</th>
+                        <th>品牌</th>
+                        <th>星级</th>
+                        <th>ASIN</th>
+                        <th>买家ID(URL)</th>
+                        <th>留评时间</th>
+                        <th>评论内容</th>
+                        <th>评论翻译</th>
+                        <th>是否真实购买</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for review in reviews%}
+                        <tr>
+                            <td>{{ product.created|date:"m月d日" }}</td>
+			                <td>{% if product.brand %}{{ product.brand }}{% endif %}
+                                {% if product.label %}({{ product.label }}){% endif %}</td>
+			                <td>{{ review.star }}星</td>
+			                <td>{{ product.asin }}</td>
+                            <td><a href="{{review.customer_url}}" target="_blank">{{ review.customer_id }}</a></td>
+                            <td>{{ review.review_time }}</td>
+			                <td>{{ review.review_text }}</td>
+			                <td>{{ review.review_chinese }}</td>
+			                <td>{% if review.normal %}真实购买{% else %}直接评论{% endif %}</td>
+			            </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <br>
+        <h4 id="ques_ans"style="border-bottom: 2px solid #dddddd; margin:7px;padding:29.5px;">{{ product.title|truncatewords:7 }}的问答：</h4>
+        <a style="color: red" href="{% url 'review_qa_collect:qa_csv_view' product.pk %}" target="_blank">下载CSV</a>
+        <div style="overflow: auto;">
+            <table id="sellers" class="display" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>日期</th>
+                        <th>问题</th>
+                        <th>答案</th>
+                        <th>回答者</th>
+                        <th>VOTE数量</th>
+                        <th>答案总数</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for qa in QAs%}
+                        <tr>
+                            <td>{{ qa.qa_time }}</td>
+                            <td>{% if qa.question %}{{ qa.question }}{% endif %}
+                                {% if qa.question_chinese %}({{qa.question_chinese}}){% endif %}</td>
+			                <td>{% if qa.answer_url %}<a href="{{qa.answer_url}}" target="_blank">{% endif %}
+                                {% if qa.answer %}{{ qa.answer }}{% endif %}
+                                {% if qa.answer_chinese %}({{qa.answer_chinese}}){% endif %}
+                                {% if qa.answer_url %}</a>{% endif %}</td>
+                            <td>{{ qa.answer_person }}</td>
+                            <td>{{ qa.vote }}</td>
+                            <td>{{ qa.num }}</td>
+			            </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+</div>
+{% endblock %}
+
+{% block extrajsexternal %}
+    <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+    <!--<script type="text/javascript" src="/static/main.js"></script>-->
+{% endblock %}

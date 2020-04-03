@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} 短链接 | {{ site_name }}{% endblock %}
+{% load crispy_forms_tags %}
+{% block rootcontainer %}
+    <div class="search_description">
+     {% if user.is_authenticated %}
+        <span>当前剩余积分：<i class="red">{{user.settings.credit}}</i></span>
+        <span class="buy">积分不够？<a href="{% url 'payment:recharge' %}" target="_blank">立即购买</a></span>
+    {% else %}
+    <span>新用户免费获得100积分,免费查询竞品信息,每跟踪一个月消耗<i class="red">&nbsp;6&nbsp;</i>积分</span>
+    {% endif %}
+        <span class="buy"><a href="/blog/get-seller-id/"><i class="fa fa-lightbulb-o" aria-hidden="true"></i>&nbsp;帮助中心</a></span>
+    </div>
+<div class="container clearfix">
+        {% if messages %} <!--messages的用法-->
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">
+                        {{ message|safe }} <!--safe的用法-->
+                <a href="javascript:;" class="close" >&times;</a> 
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <div class="col-lg-12 ">
+        <img src="{% static "images/spin.gif" %}" id="gif" style="display: none; margin: 0 auto; width: 100px; /* visibility: hidden; */">
+        </div>
+
+    <div class="clearfix">
+        <div class="row">
+        <div class="col-md-6">
+        <div id="url_submit">
+         <form action="." method="post" onsubmit='showLoading();' id="login_form">
+             <div class="form_input">
+                <select class="country_select" id="id_country" name="country" required>
+                  <option value="us">美国</option>
+                  <option value="ca">加拿大</option>
+                  <option value="fr">法国</option>
+                  <option value="uk">英国</option>
+                  <option value="de">德国</option>
+                  <option value="it">意大利</option>
+                  <option value="jp">日本</option>
+                  <option value="es">西班牙</option>
+                </select>
+                <input class="asin_input" id="id_asin" maxlength="250" name="asin" placeholder="请输入Asin" type="text" required oninvalid="setCustomValidity('请输入Asin');"  oninput="setCustomValidity('');" />
+                 <input class="seller_input" id="id_seller" maxlength="250" name="seller" placeholder="请输入Seller(非必需)" type="text" oninvalid="setCustomValidity('请输入Seller');" style="margin-top: 10px;" oninput="setCustomValidity('');" />
+              </div>
+              <textarea class="keywords" cols="59" id="id_keywords" name="keywords" placeholder="请输入关键词，多个关键词请回车换行" rows="10" required oninvalid="setCustomValidity('请输入关键词');" oninput="setCustomValidity('');" ></textarea>
+              {% csrf_token %}
+              <input type="submit" class="sub_btn sub" value="添加http url" onclick="get();">
+            </form>
+        </div>
+            </div>
+        <!-- fl end -->
+        <!-- fr start-->
+        <div class="col-md-6">
+        <div class="content">
+    <div class="content_header">
+        <table class="dataTable">
+            <thead>
+              <tr>
+                <th width="8%">国家</th>
+                <th width="10%">ASIN</th>
+                <th width="11%">SellerId</th>
+                <th width="8%">点击数</th>
+                <th width="9%">操作</th>
+              </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="content_body">
+        <table class="dataTable">
+        <tbody>
+            {% for url in urls %}
+            <tr>
+                <td width="8%">{{url.get_country_display}}</td>
+                <td width="10%">{{url.asin}}</td>
+                <td width="11%">{{url.seller}}</td>
+                <td width="8%">{{url.count}}</td>
+                <td width="10%">
+                    <a href="javascript:;" onclick="amz668.copySuperUrl(this);"
+                     data-url="http://www.amz668.com/{{ url.shorten_id }}" title="复制">
+                        <i class="fa fa-copy"></i>
+                    </a>
+                   &emsp;
+                    <a href="/short_url/delete/{{ url.id }}" onclick="amz668.deleteSuperUrl(this);" title="删除">
+                        <i class="fa fa-trash-o"></i>
+                    </a>
+                </td>
+            </tr>
+	<tr class="smallscreen"><td colspan="5">生成的短链：http://www.amz668.com/{{ url.shorten_id }}</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</div></div></div>
+        <!-- div end -->
+        </div>
+    </div>
+<!--
+>>>>>>> 8caeed76a0f46e3ac847276311766864650d9f87
+        <ul class="messages"><li class="success">已经保存的短链接</li></ul>
+        <div id="people-list">
+            {% for url in urls %}
+                <div class="user">
+                    <a id="name" href="javascript:;">{{ url.short_id }}</a>
+                    <br>
+                    <a class="small">原本的链接: {{ url.httpurl }}</a>
+                </div>
+            {% endfor %}
+        </div>
+        -->
+</div>
+{% endblock %}
+{% block extrajsexternal %}
+<script type="text/javascript">
+$('#login_form').submit(function() {
+    $('#gif').css('display', 'block');
+});
+
+</script>
+{% endblock %}
+
+
+

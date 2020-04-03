@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block title %} {{ inventory.title|truncatewords:7 }}的库存 | {{ site_name }}{% endblock %}
+{% load static %}
+
+{% block extracss %}
+{% endblock %}
+
+{% block rootcontainer %}
+ <div class="search_description">
+     {% if user.is_authenticated %}
+        <span>当前剩余积分：<i class="red">{{user.settings.credit}}</i></span>
+        <span class="buy">积分不够？<a href="{% url 'payment:recharge' %}" target="_blank">立即购买</a></span>
+        <span>每次查询消耗<i class="red">&nbsp;2&nbsp;</i>积分，24小时内查询同一个Asin，只消耗一次积分</span>
+    {% else %}
+    <span>新用户免费获得100积分,每次查询消耗<i class="red">&nbsp;2&nbsp;</i>积分，24小时内查询同一个Asin，只消耗一次积分</span>
+    {% endif %}
+</div>
+<div class="container">
+    <div id="content">
+        {% if messages %} <!--messages的用法-->
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">
+                        {{ message|safe }} <!--safe的用法-->
+                        <a href="#" class="close">×</a>
+                    </li>
+                {% endfor %}
+                <br><br>
+            </ul>
+        {% endif %}
+    </div>
+<div class="row">
+       <div class="col-lg-12 ">
+            <div class="search_box">
+                <form action="." method="post" onsubmit='showLoading();' id="login_form">
+                <!--  <label for="id_asin">Asin:</label>  -->
+                <input id="id_asin" class="search_input" placeholder="请输入ASIN" maxlength="100" name="asin" type="text" required="">
+                    <select  class="search_select" id="id_country" name="country" required="">
+
+                    <option value="us" selected="selected">美国</option>
+                    <option value="ca">加拿大</option>
+                    <option value="jp">日本</option>
+                    <option value="de">德国</option>
+                    <option value="it">意大利</option>
+                    <option value="es">西班牙</option>
+                    <option value="uk">英国</option>
+                </select>
+                {% csrf_token %}
+                <input type="submit" style="width:196px" value="从ASIN获得库存">
+            </form>
+            </div>
+        </div>
+
+        <div class="col-lg-12 ">
+        <img src="{% static "images/spin.gif" %}" id="gif" style="display: none; margin: 0 auto; width: 100px; /* visibility: hidden; */">
+        </div>
+</div>
+</div>
+
+<div class="container">
+    <div class="col-sm-12">
+    <div class="row-sm-12 col-sm-offset-1">
+        <br>
+        <div style="overflow: auto;">
+            <table id="change" class="display" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>ASIN</th>
+                        <th>商品名称</th>
+                        <th>时间</th>
+                        <th>库存</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for inventory_time in inventory_times %}
+                        <tr>
+                            <td>{{ inventory.asin }} </td>
+                            <td>{{ inventory.title }}</td>
+                            <td>{{ inventory_time.date|date:"Y-m-d H:i:s" }}</td>
+                            <td>{{ inventory_time.inventory }}</td>
+
+			</tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrajsexternal %}
+    <script type="text/javascript">
+        $('#login_form').submit(function() {
+            $('#gif').css('display', 'block');
+        });
+    </script>
+    <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="/static/main.js"></script>
+{% endblock %}

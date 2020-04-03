@@ -1,0 +1,43 @@
+{% load keyword_rank_tags %}
+
+<div class="user clearfix" style="position: relative;">
+    <img class="user-detail" src="{{ keyword_rank.img_url }}" width=50 style="width:50px; height:50px;">
+    <a class="products_title1" href="{{keyword_rank.detail_page_url}}">{{ keyword_rank.title }}</a>
+    <a class="products_title" {% if keyword_rank.rank_url %} href="{{keyword_rank.rank_url}}" {% endif %}>关键词:{{ keyword_rank.word|truncatewords:5 }}</a>
+
+    <span class="products_id">{{keyword_rank.get_country_display}}:{{keyword_rank.asin}}</span>
+
+    {% latest_rank keyword_rank as latest_rank %}
+    {% if latest_rank %}
+    <a class="in_stock" href="javascript:;" id="{{keyword_rank.id}}"  onclick="amz668.viewInventory(this.id);return false;"><i class="fa fa-bar-chart" aria-hidden="true"></i>{% ifequal latest_rank "第0页,第0名" %}第20页之外{% else %}{{ latest_rank }}{% endifequal %}</a>
+    {% else %}
+    <span class="in_stock" >正在获取排名</span>
+    {% endif %}
+
+    {% days_remain keyword_rank request.user as days %}
+    <span class="day_num">剩余天数:{{ days }} </span>
+    <a href="/keyword_rank/more_monitor/{{ keyword_rank.id }}" class="renewal_btn" onclick="">续期</a>
+   <!--  <a href="javascript:;" class="refresh_btn" onclick="amz668.refreshInventory(this)">刷新</a> -->
+    <!--     <a href="/keyword_rank/delete/{{ keyword_rank.id }}" class="del_btn" onclick="">删除</a>-->
+ <a href="javascript:;" data="{{keyword_rank.asin}}" data-href="http://www.amz668.com/keyword_rank/delete/{{ keyword_rank.id }}" class="del_btn" onclick="amz668.deleteInventory(this);return false;">删除</a> 
+
+
+
+    <div id="id_{{keyword_rank.id}}" style="display: none">
+    <table id="change" class="display dataTable no-footer" cellspacing="0" role="grid" aria-describedby="change_info" style="width: 100%;">
+        <thead>
+            <tr role="row">
+                <th class="sorting" tabindex="0" aria-controls="change" rowspan="1" colspan="1" aria-label="日期: activate to sort column ascending" style="width: 50px;">日期</th>
+                <th class="sorting" tabindex="0" aria-controls="change" rowspan="1" colspan="1" aria-label="排名: activate to sort column ascending" style="width: 20px;">排名</th></tr>
+        </thead>
+        <tbody id="result">
+            {% rank_times keyword_rank as rank_times %}
+            {%for rank_time in rank_times%}
+            <tr role="row" class="odd">
+                <td>{{ rank_time.created|date:"m月d日"}}</td>
+                <td>{% ifequal rank_time.text "第0页,第0名" %}在第20页之外{% else %}{{ rank_time.text }} {% endifequal %}{% if rank_time.sponsored %}(广告){% endif %}</td>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</div>

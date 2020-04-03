@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if object %}
+        Edit course "{{ object.title }}"
+    {% else %}
+        添加文件
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <h1>
+        {% if object %}
+            Edit course "{{ object.title }}"
+        {% else %}
+            添加文件
+        {% endif %}
+    </h1>
+    <div class="module">
+
+        <form action="" method="post" enctype="multipart/form-data">
+            {{ form.as_p }}
+            {% csrf_token %}
+            <p><input type="submit" value="添加文件"></p>
+        </form>
+    </div>
+{% endblock %}

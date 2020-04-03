@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block title %} 从商品ASIN获得差评信息 | {{ site_name }}{% endblock %}
+{% load static %}
+
+{% block rootcontainer %}
+    <div class="search_description">
+     {% if user.is_authenticated %}
+        <span>当前剩余积分：<i class="red">{{user.settings.credit}}</i></span>
+        <span class="buy">积分不够？<a href="{% url 'payment:recharge' %}" target="_blank">立即购买</a></span>
+    <span>每跟踪一个月差评信息消耗<i class="red">&nbsp;6&nbsp;</i>积分</span>
+    {% else %}
+    <span>新用户免费获得100积分,每跟踪一个月消耗<i class="red">&nbsp;6&nbsp;</i>积分</span>
+    {% endif %}
+        <span class="buy"><a href="/blog/chapingjiankong/"><i class="fa fa-lightbulb-o" aria-hidden="true"></i>&nbsp;使用说明</a></span>
+    </div>
+
+<div class="container">
+    <div id="content">
+        {% if messages %} <!--messages的用法-->
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">
+                        {{ message|safe }} <!--safe的用法-->
+                        <a href="#" class="close">×</a>
+                    </li>
+                {% endfor %}
+                <br><br>
+            </ul>
+        {% endif %}
+        </div>
+    <div class="row">
+        <div class="col-lg-12 ">
+            <div class="search_box">
+                <form action="." method="post">
+                    <select class="search_select" title="请选择国别" style="width: 118px;border-right: 2px solid #4cae4c;" id="id_country" name="country" required>
+                        <option value="us" selected="selected">美国</option>
+                        <option value="ca">加拿大</option>
+                        <option value="fr">法国</option>
+                        <option value="de">德国</option>
+                        <option value="it">意大利</option>
+                        <option value="jp">日本</option>
+                        <option value="es">西班牙</option>
+                        <option value="uk">英国</option>
+                    </select>
+                    <input id="id_asin" class="search_input" style="width: 238px;" maxlength="250" name="asin" type="text" required />
+                    <select  class="search_select" title="请选择start数" style="width: 118px;border-right: 2px solid #4cae4c;" id="id_star" name="star" required>
+			<option value="">请选择星级</option>
+                        <option value="1">1星</option>
+                        <option value="2">2星和以下</option>
+                        <option value="3">3星和以下</option>
+                    </select>
+                    <input type="submit" style="width:196px" value="跟踪ASIN的差评信息">
+                {% csrf_token %}
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-12 ">
+            <img src="{% static "images/spin.gif" %}" id="gif" style="display: none; margin: 0 auto; width: 100px; /* visibility: hidden; */">
+        </div>
+    </div>
+        <ul class="messages"><li class="success">正在跟踪差评的商品(出现差评时,您会收到邮件提醒)</li>
+        </ul>
+        {% if products %}{% include "crawler/action/pagination.html" with page=products %}{% endif %}
+
+    <div id="people-list">
+        {% for product in products %}
+            {% include "crawler/review_monitor/product_item.html" with product=product %}
+        {% endfor %}
+    </div>
+
+
+
+
+</div>
+{% endblock %}
+
+{% block extrajsexternal %}
+<script type="text/javascript">
+$('#login_form').submit(function() {
+    $('#gif').css('visibility', 'visible');
+});
+</script>
+{% endblock %}

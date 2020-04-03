@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}可视化编辑器 | {{ site_name }}{% endblock %}
+{% block extracss %}
+<link href="{% static 'simditor_2.3.6/styles/simditor.css' %}" rel="stylesheet">
+<link href="{% static 'simditor_2.3.6/styles/simditor-html.css' %}" rel="stylesheet"> 
+<style>
+*{font-family:"Microsoft YaHei";}
+.rich_text{max-width:80%;margin:0 auto;}
+.rich_text .prompt{line-height: 1;}
+.rich_text .prompt p:last-child{color:#f00;}
+.rich_text .sub_btn{
+  position: relative;
+  transition: all 0.2s ease;
+  display: inline-block;
+  width:20%;
+  height:35px;
+  margin:20px;
+  outline: none;
+  background:#567b69;
+  border:none; 
+  font-size:16px;
+}
+.rich_text .btn {
+  box-shadow: 0px 5px #396d1e;
+  color: #fff;
+}
+.rich_text .btn:hover {
+  background: #699a82;
+  box-shadow: 0px 4px #455d4c;
+  color: #fff;
+}
+.rich_text .btn:active {
+  top: 4px;
+  box-shadow: 0px 0px #d3545d;
+}		
+.rich_text .copy{background:#209361;}
+ .rich_text .empty{
+	box-shadow: 0px 5px #882424;
+	background: #e33737;
+}
+.num{color:#f00}
+#copy{display:none;}
+</style>
+{% endblock %}
+{% block rootcontainer %}
+ <div class="rich_text">
+        <div class="prompt">
+            <p>使用提示</p>
+            <p>第一步：输入文字，编辑出想要的效果。</p>
+            <p>第二步：点击“查看源代码”，全选、复制到 Amazon Seller central 中。</p>
+            <p>注意：从其它地方复制过来的文字，建议先点击旁边的《清除文字效果》按钮，然后再编辑。
+            <button id="clean" class="btn sub_btn">清除文字效果</button></p>
+        </div>
+       <textarea id="editor" autofocus></textarea>
+	   <span>共输入<span class="num"> 0 </span>个字符</span>
+     	<button id="copy" class="btn sub_btn">复制内容</button>
+		<button id="empty" class="btn sub_btn empty" style="float:right">清空数据</button> 
+   </div>
+{% endblock %}
+{% block extrajsexternal %}
+<script type="text/javascript" src="{% static 'simditor_2.3.6/scripts/module.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'simditor_2.3.6/scripts/module.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'simditor_2.3.6/scripts/hotkeys.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'simditor_2.3.6/scripts/simditor.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'simditor_2.3.6/scripts/beautify-html.js' %}"></script>
+<script type="text/javascript" src="{% static 'simditor_2.3.6/scripts/simditor-html.js' %}"></script>
+<script type="text/javascript" src="{% static 'simditor_2.3.6/scripts/simditor-autosave.js' %}"></script>
+{% endblock %}

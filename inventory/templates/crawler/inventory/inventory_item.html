@@ -1,0 +1,51 @@
+{% load inventory_tags %}
+
+<div class="user clearfix" style="position: relative;">
+        <img class="user-detail" src="{% if inventory.img_url %}{{ inventory.img_url }}{% else %} /static/images/icons/icon.jpg {% endif %}" width=50 style="width:50px; height:50px;">
+        <a class="products_title1" href="{{inventory.detail_page_url}}">{{ inventory.title }}</a>
+        <a class="products_title" href="javascript:;" id="{{inventory.id}}"  onclick="amz668.viewInventory(this.id);return false;"><i class="fa fa-bar-chart" aria-hidden="true"></i> 竞品信息</a>
+
+
+    <span class="products_id">{{inventory.get_country_display}}:{{inventory.asin}}</span>
+    {% latest_inven inventory as latest_inven %}
+    <span class="in_stock" >最新库存:{% ifequal latest_inven 999 %}999+{% else %}{{ latest_inven }}{% endifequal %}</span>
+
+    {% days_remain inventory request.user as days %}
+    <span class="day_num">剩余天数:{{ days }} </span>
+    <a href="/inventory/more_monitor/{{ inventory.id }}" class="renewal_btn" onclick="">续期</a>
+   <!--  <a href="javascript:;" class="refresh_btn" onclick="amz668.refreshInventory(this)">刷新</a> -->
+    <a href="/inventory/delete/{{ inventory.id }}" class="del_btn"  data="{{ inventory.asin }}" onclick="">删除</a>
+
+
+
+    <div id="id_{{inventory.id}}" style="display: none">
+    <table id="change" class="display dataTable no-footer" cellspacing="0" role="grid" aria-describedby="change_info" style="width: 100%;">
+        <thead>
+            <tr role="row">
+                <th class="sorting" tabindex="0" aria-controls="change" rowspan="1" colspan="1" aria-label="日期: activate to sort column ascending" style="width: 50px;">日期</th>
+                <th class="sorting" tabindex="0" aria-controls="change" rowspan="1" colspan="1" aria-label="库存: activate to sort column ascending" style="width: 20px;">库存</th>
+                <th class="sorting" tabindex="0" aria-controls="change" rowspan="1" colspan="1" aria-label="参考销量: activate to sort column ascending" style="width: 20px;">参考销量</th>
+                <th class="sorting" tabindex="0" aria-controls="change" rowspan="1" colspan="1" aria-label="价格: activate to sort column ascending" style="width: 20px;">价格({{ inventory.price_unit }})</th>
+                <th class="sorting" tabindex="0" aria-controls="change" rowspan="1" colspan="1" aria-label="销售金额: activate to sort column ascending" style="width: 40px;">销售金额({{ inventory.price_unit }})</th>
+                <th class="sorting" tabindex="0" aria-controls="change" rowspan="1" colspan="1" aria-label="评论: activate to sort column ascending" style="width: 50px;">评论数</th>
+                <th class="sorting" tabindex="0" aria-controls="change" rowspan="1" colspan="1" aria-label="评论: activate to sort column ascending" style="width: 50px;">评论星级</th>
+                <th class="sorting" tabindex="0" aria-controls="change" rowspan="1" colspan="1" aria-label="BSR排名: activate to sort column ascending" style="width: 50px;">BSR排名</th>
+            </tr>
+        </thead>
+        <tbody id="result">
+            {% inven_time inventory as in_times %}
+            {%for in_time in in_times%}
+            <tr role="row" class="odd">
+                <td>{{ in_time.date|date:"m月d日"}}</td>
+                <td>{% ifequal in_time.inventory 999 %}999+{% else %}{{ in_time.inventory }}{% endifequal %}</td>
+                <td>{{ in_time.sale_quan }}</td>
+                <td>{{ in_time.price }}</td>
+                <td>{{ in_time.sale_amount }}</td>
+                <td>{{ in_time.reviews }}{% if in_time.reviews_add > 0 %}(⬆{{ in_time.reviews_add }}){% endif %}</td>
+                <td>{% if in_time.star %}{{ in_time.star }}{% else %}没有开始跟踪{% endif %}</td>
+                <td>{% if in_time.bsr_rank %}{{ in_time.bsr_rank }} {% else %} 暂无排名 {% endif %}</td>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</div>

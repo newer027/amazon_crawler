@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %} 把URL中的商品添加到心愿单 | {{ site_name }}{% endblock %}
+
+{% block rootcontainer %}
+<div class="container">
+    <div id="content">
+        {% if messages %} <!--messages的用法-->
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">
+                        {{ message|safe }} <!--safe的用法-->
+                        <a href="#" class="close">×</a>
+                    </li>
+                {% endfor %}
+                <br><br>
+            </ul>
+        {% endif %}
+
+        <form action="." method="post">
+            {{ form.as_p }}
+            {% csrf_token %}
+            <input type="submit" value="添加URL">
+        </form>
+
+        <ul class="messages"><li class="success">已经提交的URL</li></ul>
+        <div id="people-list">
+            {% for url in urls %}
+                <div class="user">
+                    <a id="name" href="{{ url.url }}">{{ url.url }}</a>
+                    <br>
+                    <a class="small">{% if url.add %}已经添加到心愿单{% else %}还没有添加到心愿单{% endif %}
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
