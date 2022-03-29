@@ -51,7 +51,7 @@ numpy==1.12.0
 olefile==0.44
 packaging==16.8
 pandas==0.19.2
-paramiko==2.2.1
+paramiko==2.10.1
 parsel==1.1.0
 Pillow==4.1.0
 psutil==5.2.2
