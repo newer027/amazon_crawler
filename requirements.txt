@@ -22,7 +22,7 @@ django-admin-honeypot==1.0.0
 django-appconf==1.0.2
 django-axes==2.3.2
 django-braces==1.11.0
-django-celery-results==1.0.1
+django-celery-results==2.4.0
 django-ckeditor==5.2.2
 django-compressor==2.1.1
 django-crispy-forms==1.6.1
